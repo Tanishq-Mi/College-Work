@@ -1,0 +1,43 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+ 
+// Structure to represent a process typedef struct { 
+    int id;          // Process ID     int priority;    // Process priority     int burst_time;  // Burst time     int start_time;  // Start time     int end_time;    // End time 
+} Process; 
+ 
+// Function to implement Priority Inheritance Protocol (PIP) void priority_inheritance(Process *process, int ceiling_priority) {     if (process->priority < ceiling_priority) {         process->priority = ceiling_priority;         printf("Process %d priority increased to %d (PIP)\n", process->id, ceiling_priority); 
+    } 
+} 
+ 
+// Function to implement Priority Ceiling Protocol (PCP) void priority_ceiling(Process *process, int ceiling_priority) {     if (process->priority < ceiling_priority) {         process->priority = ceiling_priority;         printf("Process %d priority increased to %d (PCP)\n", process->id, ceiling_priority); 
+    } 
+} 
+ 
+// Function to calculate response time int calculate_response_time(Process process) {     return process.end_time - process.start_time; } 
+ 
+// Function to generate a Gantt Chart 
+void generate_gantt_chart(Process processes[], int n) {     printf("\nGantt Chart:\n");     for (int i = 0; i < n; i++) {         printf("Process %d: [%d - %d]\n", processes[i].id, processes[i].start_time, processes[i].end_time); 
+    } 
+} 
+ 
+// Main function int main() {     int n, quantum;     printf("Enter the number of processes: ");     scanf("%d", &n); 
+ 
+    Process processes[n]; 
+ 
+    // Input process details     for (int i = 0; i < n; i++) {         processes[i].id = i + 1;         printf("Enter burst time for Process %d: ", processes[i].id);         scanf("%d", &processes[i].burst_time);         printf("Enter priority for Process %d: ", processes[i].id);         scanf("%d", &processes[i].priority);         processes[i].start_time = 0;         processes[i].end_time = 0; 
+    }  
+    // Simulate process execution     int current_time = 0;     for (int i = 0; i < n; i++) {         processes[i].start_time = current_time;         processes[i].end_time = current_time + processes[i].burst_time;         current_time = processes[i].end_time; 
+ 
+        // Apply Priority Inheritance Protocol (PIP) 
+        priority_inheritance(&processes[i], 10); // Example ceiling priority = 10 
+ 
+        // Apply Priority Ceiling Protocol (PCP)         priority_ceiling(&processes[i], 10); // Example ceiling priority = 10 
+    }  
+    // Generate Gantt Chart 
+    generate_gantt_chart(processes, n); 
+ 
+    // Calculate and display response times      printf("\nResponse Times:\n");     for (int i = 0; i < n; i++) {         int response_time = calculate_response_time(processes[i]);         printf("Process %d: %d\n", processes[i].id, response_time); 
+    } 
+ 
+    return 0; 
+}  
